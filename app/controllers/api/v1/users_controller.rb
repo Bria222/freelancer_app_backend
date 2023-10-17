@@ -10,13 +10,14 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    @user = User.where(id: params[:id])
-    if @user
-      render json: @user, status: :ok
-    else
-      render json:'no user was found', status: 404
-    end
+  @user = User.find_by(id: params[:id])
+  if @user
+    render json: @user, serializer: UserSerializer, status: :ok
+  else
+    render json: 'No user was found', status: :not_found
   end
+end
+
 
   def create
     @user = User.new(user_params)

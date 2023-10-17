@@ -4,15 +4,15 @@ Rails.application.routes.draw do
     namespace :v1 do
       # Users
       get '/users', to: 'users#index' do
-        get :image, on: :member
+        get :avatar, on: :member
       end
      get '/user/:id', to: 'users#show' do
-        get :image, on: :member
+        get :avatar, on: :member
       end
      
       post '/users/add', to: 'users#create'
       delete '/users/delete/:id', to: 'users#destroy'
-      patch '/users/update/:id', to: 'users#update'
+      patch '/user/update/:id', to: 'users#update'
       post '/users/login', to: 'authentication#login'
 
       # Products
