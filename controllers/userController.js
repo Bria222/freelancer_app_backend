@@ -120,13 +120,13 @@ const getAllData = asyncHandler(async (req, res) => {
   if (user && user.role === 'admin') {
     try {
       const usersWithGoals = await User.find().populate({
-        path: 'goals',
-        model: 'Goal',
+        path: 'orders',
+        model: 'Order',
       })
       res.status(200).json(usersWithGoals)
     } catch (err) {
       console.error('Error fetching users with goals:', err)
-      res.status(500).json({ message: 'Error fetching users with goals' })
+      res.status(500).json({ message: 'Error fetching users with orders' })
     }
   } else {
     // User is not an admin; deny access
