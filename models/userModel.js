@@ -9,6 +9,13 @@ const userSchema = mongoose.Schema(
         ref: 'Order',
       },
     ],
+    role: {
+      type: String,
+      required: [
+        true,
+        "Please select your role (e.g., 'writer' or 'employer').",
+      ],
+    },
     firstname: {
       type: String,
       required: [true, 'Please add a firstname'],
@@ -29,11 +36,6 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: [true, 'Please add a password'],
-    },
-    role: {
-      type: String,
-      enum: ['user', 'admin', 'writer', 'employer'],
-      default: 'user',
     },
   },
   {
