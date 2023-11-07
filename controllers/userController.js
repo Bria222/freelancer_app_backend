@@ -7,9 +7,9 @@ const User = require('../models/userModel')
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { firstname, lastname, phone, email, password } = req.body
+  const { firstname, lastname, phone, email, password, role } = req.body
 
-  if (!firstname || !lastname || !phone || !email || !password) {
+  if (!role || !firstname || !lastname || !phone || !email || !password) {
     res.status(400)
     throw new Error('Please add all fields')
   }
@@ -32,6 +32,7 @@ const registerUser = asyncHandler(async (req, res) => {
     lastname,
     phone,
     email,
+    role,
     password: hashedPassword,
   })
 
@@ -42,6 +43,7 @@ const registerUser = asyncHandler(async (req, res) => {
       lastname: user.lastname,
       phone: user.phone,
       email: user.email,
+      role: user.role,
       token: generateToken(user._id),
     })
   } else {
@@ -134,6 +136,32 @@ const getAllData = asyncHandler(async (req, res) => {
   }
 })
 
+// dete user
+
+const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params
+
+  try {
+    // Check if the user making the request matches the user's _id in the token
+    if (req.user && req.user._id.toString() === id) {
+      // User is attempting to delete their own account
+      const deletedUser = await User.findByIdAndDelete(id)
+      if (deletedUser) {
+        res.status(200).json({ message: 'User deleted successfully' })
+      } else {
+        res.status(404).json({ message: 'User not found' })
+      }
+    } else {
+      // Access denied for other users
+      res.status(403).json({ message: 'Access denied' })
+    }
+  } catch (err) {
+    // Handle any errors that occur during the deletion process
+    console.error('Error deleting user:', err)
+    res.status(500).json({ message: 'Error deleting user' })
+  }
+})
+
 // Generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -147,4 +175,5 @@ module.exports = {
   getAllData,
   getMe,
   updateUser,
+  deleteUser,
 }
