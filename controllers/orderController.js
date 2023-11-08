@@ -4,34 +4,71 @@ const Order = require('../models/orderModel')
 const User = require('../models/userModel')
 
 // @desc    Get Orders
-// @route   GET /api/Orders
-// @access  Private
+
 const getOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({ user: req.user.id })
 
   res.status(200).json(orders)
 })
 
-// @desc    Set Order
-// @route   POST /api/Orders
-// @access  Private
+// @desc    create Order
+
 const createOrder = asyncHandler(async (req, res) => {
-  if (!req.body.text) {
+  if (
+    !req.body.subject ||
+    !req.body.topic ||
+    !req.body.description ||
+    !req.body.account_name ||
+    !req.body.account_order_number ||
+    !req.body.paper_type ||
+    !paper_level ||
+    !req.body.format ||
+    !req.body.language ||
+    !req.body.slides_count ||
+    !req.body.number_of_sources ||
+    !req.body.spacing ||
+    !req.body.number_of_pages ||
+    !req.body.cost_per_page ||
+    !req.body.nature ||
+    !req.body.amount ||
+    !req.body.actual_deadline ||
+    !req.body.writer_deadline ||
+    !req.body.writer ||
+    !req.body.request_mode
+  ) {
     res.status(400)
-    throw new Error('Please add a text field')
+    throw new Error('All input fields are mandatory')
   }
 
   const Order = await Order.create({
-    text: req.body.text,
     user: req.user.id,
+    subject: req.body.subject,
+    topic: req.body.topic,
+    description: req.body.description,
+    account_name: req.body.account_name,
+    account_order_number: req.body.account_order_number,
+    paper_type: req.body.paper_type,
+    paper_level: req.body.paper_level,
+    format: req.body.format,
+    language: req.body.language,
+    slides_count: req.body.slides_count,
+    number_of_sources: req.body.number_of_sources,
+    spacing: req.body.spacing,
+    number_of_pages: req.body.number_of_pages,
+    cost_per_page: req.body.cost_per_page,
+    nature: req.body.nature,
+    amount: req.body.amount,
+    actual_deadline: req.body.actual_deadline,
+    writer_deadline: req.body.writer_deadline,
+    writer: req.body.writer,
+    request_mode: req.body.request_mode,
   })
 
   res.status(200).json(Order)
 })
 
-// @desc    Update Order
-// @route   PUT /api/Orders/:id
-// @access  Private
+// @desc Update Order
+
 const updateOrder = asyncHandler(async (req, res) => {
   const Order = await Order.findById(req.params.id)
 
@@ -60,8 +97,7 @@ const updateOrder = asyncHandler(async (req, res) => {
 })
 
 // @desc    Delete Order
-// @route   DELETE /api/Orders/:id
-// @access  Private
+
 const deleteOrder = asyncHandler(async (req, res) => {
   const Order = await Order.findById(req.params.id)
 
