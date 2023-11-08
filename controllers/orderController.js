@@ -7,7 +7,6 @@ const User = require('../models/userModel')
 
 const getOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({ user: req.user.id })
-
   res.status(200).json(orders)
 })
 
@@ -21,7 +20,7 @@ const createOrder = asyncHandler(async (req, res) => {
     !req.body.account_name ||
     !req.body.account_order_number ||
     !req.body.paper_type ||
-    !paper_level ||
+    !req.body.paper_level ||
     !req.body.format ||
     !req.body.language ||
     !req.body.slides_count ||
@@ -40,7 +39,7 @@ const createOrder = asyncHandler(async (req, res) => {
     throw new Error('All input fields are mandatory')
   }
 
-  const Order = await Order.create({
+  const newOrder = await Order.create({
     user: req.user.id,
     subject: req.body.subject,
     topic: req.body.topic,
@@ -64,32 +63,26 @@ const createOrder = asyncHandler(async (req, res) => {
     request_mode: req.body.request_mode,
   })
 
-  res.status(200).json(Order)
+  res.status(200).json(newOrder)
 })
 
 // @desc Update Order
-
 const updateOrder = asyncHandler(async (req, res) => {
-  const Order = await Order.findById(req.params.id)
+  const orderId = req.params.id
 
-  if (!Order) {
-    res.status(400)
+  const existingOrder = await Order.findById(orderId)
+
+  if (!existingOrder) {
+    res.status(404)
     throw new Error('Order not found')
   }
 
-  // Check for user
-  if (!req.user) {
-    res.status(401)
-    throw new Error('User not found')
-  }
-
-  // Make sure the logged in user matches the Order user
-  if (Order.user.toString() !== req.user.id) {
+  if (existingOrder.user.toString() !== req.user.id) {
     res.status(401)
     throw new Error('User not authorized')
   }
 
-  const updatedOrder = await Order.findByIdAndUpdate(req.params.id, req.body, {
+  const updatedOrder = await Order.findByIdAndUpdate(orderId, req.body, {
     new: true,
   })
 
@@ -97,30 +90,24 @@ const updateOrder = asyncHandler(async (req, res) => {
 })
 
 // @desc    Delete Order
-
 const deleteOrder = asyncHandler(async (req, res) => {
-  const Order = await Order.findById(req.params.id)
+  const orderId = req.params.id
 
-  if (!Order) {
-    res.status(400)
+  const existingOrder = await Order.findById(orderId)
+
+  if (!existingOrder) {
+    res.status(404)
     throw new Error('Order not found')
   }
 
-  // Check for user
-  if (!req.user) {
-    res.status(401)
-    throw new Error('User not found')
-  }
-
-  // Make sure the logged in user matches the Order user
-  if (Order.user.toString() !== req.user.id) {
+  if (existingOrder.user.toString() !== req.user.id) {
     res.status(401)
     throw new Error('User not authorized')
   }
 
-  await Order.remove()
+  await existingOrder.remove()
 
-  res.status(200).json({ id: req.params.id })
+  res.status(200).json({ id: orderId })
 })
 
 module.exports = {
