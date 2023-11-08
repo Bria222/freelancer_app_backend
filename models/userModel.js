@@ -14,6 +14,9 @@ const userSchema = mongoose.Schema(
       enum: ['admin', 'writer', 'employer'],
       default: 'employer',
     },
+    avatar: {
+      type: String,
+    },
     firstname: {
       type: String,
       required: [true, 'Please add a firstname'],
