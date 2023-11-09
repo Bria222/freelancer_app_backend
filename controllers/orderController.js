@@ -4,14 +4,12 @@ const Order = require('../models/orderModel')
 const User = require('../models/userModel')
 
 // @desc    Get Orders
-
 const getOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({ user: req.user.id })
   res.status(200).json(orders)
 })
 
 // @desc    create Order
-
 const createOrder = asyncHandler(async (req, res) => {
   if (
     !req.body.subject ||
@@ -92,7 +90,6 @@ const updateOrder = asyncHandler(async (req, res) => {
 // @desc    Delete Order
 const deleteOrder = asyncHandler(async (req, res) => {
   const orderId = req.params.id
-
   const existingOrder = await Order.findById(orderId)
 
   if (!existingOrder) {
@@ -104,9 +101,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
     res.status(401)
     throw new Error('User not authorized')
   }
-
   await existingOrder.remove()
-
   res.status(200).json({ id: orderId })
 })
 

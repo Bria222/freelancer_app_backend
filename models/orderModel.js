@@ -28,7 +28,7 @@ const orderSchema = mongoose.Schema(
       },
     ],
     account_name: {
-      type: Array,
+      type: String,
       required: [true, 'Please select your acoount'],
       default: ['Hub'],
     },
