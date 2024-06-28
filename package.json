@@ -1,5 +1,5 @@
 {
-  "name": "Freelance-api",
+  "name": "cimeza-api",
   "version": "1.0.0",
   "description": "Goalsetter app for youtube tutorial",
   "main": "server.js",
@@ -11,6 +11,7 @@
   "author": "Brian nyachae",
   "license": "MIT",
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.5",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "colors": "^1.4.0",
